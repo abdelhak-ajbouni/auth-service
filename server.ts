@@ -1,14 +1,21 @@
-import express, { Request, Response, NextFunction } from "express";
-import "./config/dotenvConfig";
-import connect from "./config/mongooseConfig";
-
-import usersRoute from "./src/routes/users.route";
+import express from "express";
+import cors from "cors";
+import passport from "passport";
+import "./src/configs/dotenvConfig";
+import connect from "./src/configs/mongooseConfig";
+import { jwtStrategy } from "./src/middlewares/jwtMiddelware";
+import { routes } from "./src/routes";
 
 connect(process.env.DB_URL);
 
 const app = express();
+app.use(cors());
 app.use(express.json());
-app.use("/users", usersRoute);
+app.use(express.urlencoded({ extended: false }));
+app.use(passport.initialize());
+
+jwtStrategy(passport);
+routes(app);
 
 app.listen(process.env.PORT, () =>
   console.log(`server running on port ${process.env.PORT}`)
