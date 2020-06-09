@@ -6,7 +6,7 @@ export const validate = (req: Request, res: Response, next: NextFunction) => {
   if (!errors.isEmpty()) {
     let error: any = {};
     errors.array().map((err) => (error[err.param] = err.msg));
-    return res.status(422).json({ error });
+    return res.status(422).json({ success: false, error });
   }
 
   next();

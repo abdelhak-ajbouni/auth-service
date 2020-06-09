@@ -9,6 +9,7 @@ export const register = (req: Request, res: Response) => {
     .then((user) => {
       if (user)
         return res.status(401).json({
+          success: false,
           message:
             "The email address you have entered is already associated with another account.",
         });
@@ -17,9 +18,20 @@ export const register = (req: Request, res: Response) => {
       newUser
         .save()
         .then((user) =>
-          res.status(200).json({ token: user.generateJWT(), user: user })
+          res.status(200).json({
+            success: true,
+            message: "User added successfully",
+            data: {
+              id: user._id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+            },
+          })
         )
-        .catch((err) => res.status(500).json({ message: err.message }));
+        .catch((err) =>
+          res.status(500).json({ success: false, message: err.message })
+        );
     })
     .catch((err) =>
       res.status(500).json({ success: false, message: err.message })
@@ -34,23 +46,31 @@ export const login = (req: Request, res: Response) => {
     .then((user) => {
       if (!user)
         return res.status(401).json({
-          msg:
+          success: false,
+          message:
             "The email address " +
             req.body.email +
             " is not associated with any account. Double-check your email address and try again.",
         });
 
       if (!user.comparePassword(req.body.password))
-        return res.status(401).json({ message: "Invalid email or password" });
+        return res
+          .status(401)
+          .json({ success: false, message: "Invalid email or password" });
 
       res.status(200).json({
+        success: true,
+        message: "User logged in successfully",
         token: user.generateJWT(),
-        user: {
+        data: {
+          id: user._id,
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
         },
       });
     })
-    .catch((err) => res.status(500).json({ message: err.message }));
+    .catch((err) =>
+      res.status(500).json({ success: false, message: err.message, error: err })
+    );
 };

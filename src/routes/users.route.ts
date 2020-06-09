@@ -11,16 +11,16 @@ router.post("/", async (req: Request, res: Response) => {
 
   const savedUser = await newUser
     .save()
-    .catch((error) => res.status(400).json({ error: error }));
-  res.status(200).send(savedUser);
+    .catch((error) => res.status(400).json({ success: false, error: error }));
+  res.status(200).json({ success: true, data: savedUser });
 });
 
 router.get("/", async (req: Request, res: Response) => {
   const allUsers = await User.find().catch((error) =>
-    res.status(500).json({ error: error })
+    res.status(500).json({ success: false, error: error })
   );
 
-  res.status(200).send(allUsers);
+  res.status(200).json({ success: true, data: allUsers });
 });
 
 export default router;

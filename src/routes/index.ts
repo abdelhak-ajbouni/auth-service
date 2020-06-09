@@ -6,10 +6,9 @@ import usersRoute from "../routes/users.route";
 export const routes = (app: Application) => {
   app.get("/", (req: Request, res: Response) => {
     res.status(200).send({
-      message:
-        "Welcome to the AUTHENTICATION API. Register or Login to test Authentication.",
+      message: "No response.",
     });
   });
   app.use("/api/auth", authRoute);
-  app.use("/api/user", authenticate, usersRoute);
+  app.use("/api/users", authenticate, usersRoute);
 };
