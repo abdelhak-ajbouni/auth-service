@@ -10,12 +10,10 @@ export const authenticate = (
     if (err) return next(err);
 
     if (!user)
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Unauthorized Access - No Token Provided!",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized Access",
+      });
 
     req.user = user;
 

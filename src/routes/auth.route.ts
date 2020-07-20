@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 
 import { check } from "express-validator";
-import { register, login } from "../controllers/auth";
+import { register, login, logout } from "../controllers/auth";
 import { validate } from "../middlewares/validate";
 
 const router = Router();
@@ -31,5 +31,7 @@ router.post(
   validate,
   login
 );
+
+router.post("/logout", logout);
 
 export default router;

@@ -50,7 +50,7 @@ export const login = (req: Request, res: Response) => {
           message:
             "The email address " +
             req.body.email +
-            " is not associated with any account. Double-check your email address and try again.",
+            " is not associated with any account.",
         });
 
       if (!user.comparePassword(req.body.password))
@@ -73,4 +73,14 @@ export const login = (req: Request, res: Response) => {
     .catch((err) =>
       res.status(500).json({ success: false, message: err.message, error: err })
     );
+};
+
+// @route POST api/auth/logout
+// @desc Logout user
+// @access Public
+export const logout = (req: Request, res: Response) => {
+  if (req.isAuthenticated()) {
+    req.logout();
+    res.redirect("/");
+  }
 };
