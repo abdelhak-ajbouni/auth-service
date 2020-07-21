@@ -10,5 +10,9 @@ export const routes = (app: Application) => {
     });
   });
   app.use("/api/auth", authRoute);
-  app.use("/api/users", authenticate, usersRoute);
+  app.use(
+    "/api/users",
+    (req, res, next) => authenticate(req, res, next, "ADMIN"),
+    usersRoute
+  );
 };

@@ -4,10 +4,12 @@ import bcrypt from "bcrypt";
 import "../configs/dotenvConfig";
 
 export interface IUser extends mongoose.Document {
-  email: string;
   password: string;
   firstName: string;
   lastName: string;
+  email: string;
+  isEmailVerified: boolean;
+  role: string;
   generateJWT: () => string;
   comparePassword: (arg0: string) => boolean;
 }
@@ -19,6 +21,16 @@ const userSchema = new mongoose.Schema(
       unique: true,
       required: "email is required",
       trim: true,
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    role: {
+      type: String,
+      enum: ["ADMIN", "SIMPLE_USER"],
+      default: "SIMPLE_USER",
+      required: "role is required",
     },
     password: {
       type: String,
@@ -55,10 +67,12 @@ userSchema.methods.comparePassword = function (password: string) {
 userSchema.methods.generateJWT = function () {
   let payload = {
     id: this._id,
-    email: this.email,
     username: this.username,
     firstName: this.firstName,
     lastName: this.lastName,
+    email: this.email,
+    isEmailVerified: this.isEmailVerified,
+    role: this.role,
   };
 
   return jwt.sign(payload, `${process.env.JWT_SECRET}`, {

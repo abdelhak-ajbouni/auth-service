@@ -11,10 +11,15 @@ export const register = (req: Request, res: Response) => {
         return res.status(401).json({
           success: false,
           message:
-            "The email address you have entered is already associated with another account.",
+            "This email address is already associated with another account.",
         });
 
-      const newUser = new User(req.body);
+      const newUser = new User({
+        email: req.body.email,
+        password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+      });
       newUser
         .save()
         .then((user) =>
@@ -24,8 +29,10 @@ export const register = (req: Request, res: Response) => {
             data: {
               id: user._id,
               email: user.email,
+              isEmailVerified: user.isEmailVerified,
               firstName: user.firstName,
               lastName: user.lastName,
+              role: user.role,
             },
           })
         )
@@ -67,6 +74,8 @@ export const login = (req: Request, res: Response) => {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          role: user.role,
+          isEmailVerified: user.isEmailVerified,
         },
       });
     })
