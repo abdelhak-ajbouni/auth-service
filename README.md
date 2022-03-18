@@ -1,2 +1,3 @@
-# express-typescript
-express boilerplate with typescript
+# auth-service
+
+auth service with expressjs, passport and typescript
